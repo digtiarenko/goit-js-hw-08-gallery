@@ -20,11 +20,13 @@ const closeBtn = document.querySelector('button[data-action="close-lightbox"]');
 //   })
 //   .join('');
 // galleryRef.insertAdjacentHTML('afterbegin', galleryHtml);
+
 // Створюємо розмітку для галереї через createElement
-let currentIndex;
+
+let currentIndex = 0;
 let maxIndex = gallery.length - 1;
 
-const galleryHtml = gallery.map(picture => {
+const galleryHtml = gallery.map((picture, i) => {
   const li = document.createElement('li');
   const a = document.createElement('a');
   const img = document.createElement('img');
@@ -38,7 +40,7 @@ const galleryHtml = gallery.map(picture => {
   img.setAttribute('alt', picture.description);
   // Дата-індекс для гортання
   img.dataset.index = gallery.indexOf(picture);
-  li.dataset.index = gallery.indexOf(picture);
+  // ??? li.dataset.index = gallery.indexOf(picture);
   a.appendChild(img);
   li.appendChild(a);
   return li;
@@ -99,37 +101,22 @@ overlayRef.addEventListener('click', event => {
 function onArrowPress(event) {
   if (event.code === 'ArrowRight') {
     if (currentIndex === maxIndex) {
+      console.log('кінець списку');
       return;
     }
     currentIndex += 1;
-    modalImageRef.dataset.index = currentIndex;
-
     console.log(currentIndex);
-    modalImageRef.setAttribute(
-      'src',
-      galleryHtml[currentIndex + 1].firstChild.firstChild.dataset.source,
-    );
-    modalImageRef.setAttribute(
-      'alt',
-      galleryHtml[currentIndex + 1].firstChild.firstChild.alt,
-    );
+    modalImageRef.src = gallery[currentIndex].original;
+    modalImageRef.alt = gallery[currentIndex].description;
   }
   if (event.code === 'ArrowLeft') {
     if (currentIndex === 0) {
-      currentIndex = 0;
+      console.log(' вперлись в початок списку');
       return;
     }
     currentIndex -= 1;
-    modalImageRef.dataset.index = currentIndex;
     console.log(currentIndex);
-    modalImageRef.setAttribute(
-      'src',
-      galleryHtml[currentIndex - 1].firstChild.firstChild.dataset.source,
-    );
-
-    modalImageRef.setAttribute(
-      'alt',
-      galleryHtml[currentIndex + 1].firstChild.firstChild.getAttribute('alt'),
-    );
+    modalImageRef.src = gallery[currentIndex].original;
+    modalImageRef.alt = gallery[currentIndex].description;
   }
 }
